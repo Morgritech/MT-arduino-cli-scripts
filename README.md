@@ -19,16 +19,17 @@ These files are used by setup/build scripts to automatically install the require
 The setup/build scripts can be added to your project using Git Submodules by running the following command:
 
 ``` shell
-git submodule add https://github.com/Morgritech/MT-arduino-cli-scripts/scripts scripts
+git submodule add https://github.com/Morgritech/MT-arduino-cli-scripts external/mt-arduino-cli-scripts
 ```
 
 The resulting project folder structure should look like this:
 
 ``` text
 Project  
-├─ scripts  
-│   ├─ setup-build-linux.sh  
-│   └─ setup-build-windows.cmd  
+├─ external  
+│   └─ mt-arduino-cli-scripts 
+|       |─ setup-build-linux.sh  
+│       └─ setup-build-windows.cmd  
 ├─ src  
 │   ├─ some_other_file.cpp  
 │   ├─ some_other_file.h  
@@ -39,7 +40,7 @@ Project
 
 ## Setup and build scripts
 
-The following sections will assume that the submodule was created exactly as described above, however, you may replace scripts in the above and following commands with your desired folder name. The commands described in the following sections must be executed in the projects root directory to allow directory paths to resolve correctly.
+The following sections will assume that the submodule was created exactly as described above, however, you may replace ```external/mt-arduino-cli-scripts``` in the above and following commands with your desired directory. The commands described in the following sections must be executed in the projects root directory to allow directory paths to resolve correctly.
 
 ### Windows
 
@@ -50,7 +51,7 @@ Open a Command Prompt (CMD) terminal, navigate to the project directory, and run
 Install arduino-cli:
 
 ``` shell
-scripts\setup-build-windows.cmd -cli
+external\mt-arduino-cli-scripts\setup-build-windows.cmd -cli
 ```
 
 OR
@@ -58,7 +59,7 @@ OR
 Install arduino-cli and add it to the Windows environment path. This allows you to run ```arduino-cli``` commands (if desired) directly without specifying the full path to the arduino-cli executable (%ProgramFiles%\Arduino CLI):
 
 ``` shell
-scripts\setup-build-windows.cmd -cli --path
+external\mt-arduino-cli-scripts\setup-build-windows.cmd -cli --path
 ```
 
 > [!NOTE]
@@ -67,7 +68,7 @@ scripts\setup-build-windows.cmd -cli --path
 Install arduino cores and libraries:
 
 ``` shell
-scripts\setup-build-windows.cmd -deps
+external\mt-arduino-cli-scripts\setup-build-windows.cmd -deps
 ```
 
 **Build and optionally upload the project.**
@@ -75,13 +76,13 @@ scripts\setup-build-windows.cmd -deps
 Build only:
 
 ``` shell
-scripts\setup-build-windows.cmd -build
+external\mt-arduino-cli-scripts\setup-build-windows.cmd -build
 ```
 
 Build and upload:
 
 ``` shell
-scripts\setup-build-windows.cmd -build --port COM3 --upload
+external\mt-arduino-cli-scripts\setup-build-windows.cmd -build --port COM3 --upload
 ```
 
 Replace COM3 in the command with the desired serial port.
@@ -103,7 +104,7 @@ Replace "username" with your actual username/log-in name. You will need to log-o
 Install arduino-cli:
 
 ``` shell
-scripts/setup-build-linux.sh -cli
+external/mt-arduino-cli-scripts/setup-build-linux.sh -cli
 ```
 
 OR
@@ -111,7 +112,7 @@ OR
 Install arduino-cli and add it to the Windows environment path. This allows you to run ```arduino-cli``` commands (if desired) directly without specifying the full path to the arduino-cli executable (~/bin):
 
 ``` shell
-source scripts/setup-build-linux.sh -cli --path
+source external/mt-arduino-cli-scripts/setup-build-linux.sh -cli --path
 ```
 
 > [!NOTE]
@@ -120,7 +121,7 @@ source scripts/setup-build-linux.sh -cli --path
 Install arduino cores and libraries:
 
 ``` shell
-scripts/setup-build-linux.sh -deps
+external/mt-arduino-cli-scripts/setup-build-linux.sh -deps
 ```
 
 **Build and optionally upload the project.**
@@ -128,13 +129,13 @@ scripts/setup-build-linux.sh -deps
 Build only:
 
 ``` shell
-scripts/setup-build-linux.sh -build
+external/mt-arduino-cli-scripts/setup-build-linux.sh -build
 ```
 
 Build and upload:
 
 ``` shell
-scripts/setup-build-linux.sh -build --port /dev/ttyACM0 --upload
+external/mt-arduino-cli-scripts/setup-build-linux.sh -build --port /dev/ttyACM0 --upload
 ```
 
 Replace /dev/ttyACM0 in the command with the desired serial port.
