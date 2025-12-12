@@ -48,6 +48,12 @@ Open a Command Prompt (CMD) terminal, navigate to the project directory, and run
 
 **Setup a Windows device ready to build the project.**
 
+Print help/usage instructions:
+
+``` shell
+external\mt-arduino-cli-scripts\setup-build-windows.cmd -help
+```
+
 Install arduino-cli:
 
 ``` shell
@@ -100,6 +106,12 @@ sudo usermod -a -G dialout username
 ```
 
 Replace "username" with your actual username/log-in name. You will need to log-out and back in again for changes to take effect.
+
+Print help/usage instructions:
+
+``` shell
+external/mt-arduino-cli-scripts/setup-build-windows.cmd -help
+```
 
 Install arduino-cli:
 
