@@ -95,7 +95,7 @@ Open a terminal, navigate to the project directory, and run the commands in the 
 In order for Arduino tools to access the ports (e.g., to upload the programme to a board), your username/log-in name must be added to the dialout group:
 
 ``` shell
-sudo usermod -a G dialout username
+sudo usermod -a -G dialout username
 ```
 
 Replace "username" with your actual username/log-in name. You will need to log-out and back in again for changes to take effect.
