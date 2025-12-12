@@ -19,7 +19,7 @@ These files are used by setup/build scripts to automatically install the require
 The setup/build scripts can be added to your project using Git Submodules by running the following command:
 
 ``` shell
-git submodule add https://github.com/Morgritech/MT-arduino-cli-scripts scripts
+git submodule add https://github.com/Morgritech/MT-arduino-cli-scripts/scripts scripts
 ```
 
 The resulting project folder structure should look like this:
