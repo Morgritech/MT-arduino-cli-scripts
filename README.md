@@ -11,10 +11,28 @@ The following files must also be present in your projects root directory:
 - arduino-boards.txt
 - arduino-libs.txt
 
-These files are used by setup/build scripts to automatically install the required libraries, and build/compile/upload the project as described in the following sections. The project will be built for all boards defined in ```arduino-boards.txt```.
+These files are used by setup/build scripts to automatically install the required libraries defined in ```arduino-libs.txt```, and build/compile/upload the project for all required boards defined in ```arduino-libs.txt```. The required Arduino cores are extracted from the defined boards and installed. Binaries from the build process when running the scripts will be created in a folder called ```build```.
 
-> [!NOTE]
-> Running the setup/build scripts will install arduino-cli and other dependencies (Arduino cores and libraries) on your device. Cores are extracted from the required boards defined in ```arduino-boards.txt``` and required libraries are defined in ```arduino-libs.txt```. Binaries from the build process when running the scripts will be created in a folder called ```build```.
+Example content for arduino-boards.txt is shown below:
+
+``` text
+arduino:avr:uno
+arduino:renesas_uno:minima
+```
+
+Example content for arduino-libs.txt is shown below:
+
+``` text
+MT-arduino-rotary-encoder@1.1.1
+MT-arduino-momentary-button@3.0.2
+MT-arduino-stepper-driver@3.1.2
+```
+
+To prevent Git from tracking the build folder, you may include the following in your .gitignore:
+
+``` text
+build
+```
 
 The setup/build scripts can be added to your project using Git Submodules by running the following command:
 
@@ -41,6 +59,9 @@ Project
 ## Setup and build scripts
 
 The following sections will assume that the submodule was created exactly as described above, however, you may replace ```external/mt-arduino-cli-scripts``` in the above and following commands with your desired directory. The commands described in the following sections must be executed in the projects root directory to allow directory paths to resolve correctly.
+
+> [!NOTE]
+> Running the setup/build scripts will install arduino-cli and other dependencies (Arduino cores and libraries) on your device.
 
 ### Windows
 
