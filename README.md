@@ -11,7 +11,7 @@ The following files must also be present in your projects root directory:
 - arduino-boards.txt
 - arduino-libs.txt
 
-These files are used by setup/build scripts to automatically install the required libraries defined in `arduino-libs.txt`, and build/compile/upload the project for all required boards defined in `arduino-libs.txt`. The required Arduino cores are extracted from the defined boards and installed. Binaries from the build process when running the scripts will be created in a folder called `build`.
+These files are used by setup/build scripts to automatically install the required libraries defined in `arduino-libs.txt`, and build/compile/upload the project for all required boards defined in `arduino-boards.txt`. The required Arduino cores are extracted from the defined boards and installed. Binaries from the build process when running the scripts will be created in a folder called `build`.
 
 Example content for arduino-boards.txt is shown below:
 
