@@ -4,14 +4,14 @@ Setup and build scripts leveraging Arduino CLI for compiling and uploading C++ c
 
 ## Project setup
 
-Your Arduino C++ source code must be contained in a folder in your projects root directory called ```src```, which should contain the main Arduino sketch file ```src.ino```.
+Your Arduino C++ source code must be contained in a folder in your projects root directory called `src`, which should contain the main Arduino sketch file `src.ino`.
 
 The following files must also be present in your projects root directory:
 
 - arduino-boards.txt
 - arduino-libs.txt
 
-These files are used by setup/build scripts to automatically install the required libraries defined in ```arduino-libs.txt```, and build/compile/upload the project for all required boards defined in ```arduino-libs.txt```. The required Arduino cores are extracted from the defined boards and installed. Binaries from the build process when running the scripts will be created in a folder called ```build```.
+These files are used by setup/build scripts to automatically install the required libraries defined in `arduino-libs.txt`, and build/compile/upload the project for all required boards defined in `arduino-libs.txt`. The required Arduino cores are extracted from the defined boards and installed. Binaries from the build process when running the scripts will be created in a folder called `build`.
 
 Example content for arduino-boards.txt is shown below:
 
@@ -54,6 +54,28 @@ Project
 │   └─ src.ino  
 ├─ arduino-boards.txt  
 ├─ arduino-libs.txt  
+```
+
+If you've cloned a project containing the scripts as a submodule, the files must be brought in by running the following command:
+
+``` shell
+git submodule update --init --recursive
+```
+
+If the scripts are updated in this repository, you can bring in the updates to your project by running the following commands:
+
+``` shell
+cd external/mt-arduino-cli-scripts
+git pull
+cd ../..
+git add external/mt-arduino-cli-scripts
+git commit -m "Update submodule to new commit."
+```
+
+Anyone who performs a `git pull` on the project after the submodule has been updated as described above must run the following command:
+
+``` shell
+git submodule update --recursive
 ```
 
 ## Setup and build scripts
