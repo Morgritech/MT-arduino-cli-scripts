@@ -35,7 +35,8 @@ if [ "$1" == "$CMD_CLI" ] ; then
   popd > /dev/null # Restore the working directory + suppress the output of popd.
 
   if [ "$2" == "$ARG_PATH" ] ; then
-    echo ...Adding arduino-cli to the Linux user environment path...
+    # Add arduino CLI directory to Linux environment path (current session) so it can be executed directly.
+    echo ...Adding arduino-cli to the Linux environment path...
     echo
     PATH=$PATH:$ARDUINO_CLI_DIR
   fi
