@@ -115,6 +115,7 @@ if [ "$1" == "$CMD_HELP" ] || ([ "$1" != "$CMD_CLI" ] && [ "$1" != "$CMD_DEPS" ]
   $CMD_DEPS   Install project dependencies (Arduino cores and libraries).
   $CMD_BUILD  Compile the project. Add optional arduino-cli flags if desired (e.g., to upload the programme to the board).
   $CMD_HELP   Show available commands.
+  
   Usage:
   $SCRIPT_NAME <command>
   $SCRIPT_NAME $CMD_CLI [optional flag]
