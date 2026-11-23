@@ -1,14 +1,9 @@
 # Check admin privileges.
-#$isAdmin = (
-#  [Security.Principal.WindowsPrincipal]::new(
-#    [Security.Principal.WindowsIdentity]::GetCurrent()
-#  )
-#).IsInRole(
-#  [Security.Principal.WindowsBuiltInRole]::Administrator
-#)
-
-#if (-not $isAdmin) {
-#  Write-Host "Please run as admin."
+#$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+#$Principal = [Security.Principal.WindowsPrincipal]::new($Identity)
+#if (-not $Principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+#{
+#  Write-Host "Please run as administrator."
 #  exit 1
 #}
 
