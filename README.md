@@ -80,7 +80,7 @@ git submodule update --recursive
 
 ## Setup and build scripts
 
-The following sections will assume that the submodule was created exactly as described above, however, you may replace ```external/mt-arduino-cli-scripts``` in the above and following commands with your desired directory. The commands described in the following sections must be executed in the projects root directory to allow directory paths to resolve correctly.
+The following sections will assume that the submodule was created exactly as described above, however, you may replace `external/mt-arduino-cli-scripts` in the above and following commands with your desired directory. The commands described in the following sections must be executed in the projects root directory to allow directory paths to resolve correctly.
 
 > [!NOTE]
 > Running the setup/build scripts will install arduino-cli and other dependencies (Arduino cores and libraries) on your device.
@@ -105,7 +105,7 @@ external\mt-arduino-cli-scripts\setup-build-windows.cmd -cli
 
 OR
 
-Install arduino-cli and add it to the Windows environment path. This allows you to run ```arduino-cli``` commands (if desired) directly without specifying the full path to the arduino-cli executable (%ProgramFiles%\Arduino CLI):
+Install arduino-cli and add it to the Windows environment path. This allows you to run `arduino-cli` commands (if desired) directly without specifying the full path to the arduino-cli executable (%ProgramFiles%\Arduino CLI):
 
 ``` shell
 external\mt-arduino-cli-scripts\setup-build-windows.cmd -cli --path
@@ -164,7 +164,7 @@ external/mt-arduino-cli-scripts/setup-build-linux.sh -cli
 
 OR
 
-Install arduino-cli and add it to the Windows environment path. This allows you to run ```arduino-cli``` commands (if desired) directly without specifying the full path to the arduino-cli executable (~/bin):
+Install arduino-cli and add it to the Windows environment path. This allows you to run `arduino-cli` commands (if desired) directly without specifying the full path to the arduino-cli executable (~/bin):
 
 ``` shell
 source external/mt-arduino-cli-scripts/setup-build-linux.sh -cli --path
