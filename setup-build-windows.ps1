@@ -1,7 +1,8 @@
 # Check admin privileges.
 #$isAdmin = (
-#  [Security.Principal.WindowsPrincipal]
-#  [Security.Principal.WindowsIdentity]::GetCurrent()
+#  [Security.Principal.WindowsPrincipal]::new(
+#    [Security.Principal.WindowsIdentity]::GetCurrent()
+#  )
 #).IsInRole(
 #  [Security.Principal.WindowsBuiltInRole]::Administrator
 #)
