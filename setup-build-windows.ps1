@@ -22,16 +22,19 @@ $ArduinoCliDir = "$env:ProgramFiles\Arduino CLI"
 $ArduinoCliExe = Join-Path $ArduinoCliDir "arduino-cli.exe"
 
 function Install-ArduinoCli {
+  param([switch]$AddToPath)
+
   Write-Host "...Installing Arduino CLI..."
   Write-Host ""
   
   winget install --accept-package-agreements -e ArduinoSA.CLI
   Write-Host ""
 
-  if ($args.Count -gt 1 -and $args[1] -eq $ArgPath) {
+  if ($AddToPath) {
     # Add arduino CLI directory to Windows environment path (current session) so it can be executed directly.
     Write-Host "...Adding Arduino CLI to the Windows environment path..."
     Write-Host ""
+
     $env:PATH += ";$ArduinoCliDir"
   }
 
@@ -48,15 +51,17 @@ function Install-Dependencies {
 
   # Specify the directory to the file listing the required arduino cores.
   # The name of the cores will be extracted from the name of the boards.
-  $Cores = "arduino-boards.txt"
+  $BoardsFile = "arduino-boards.txt"
 
   & $ArduinoCliExe core update-index
 
   # Read one line at a time.
   # Split text separated by colon (:).
-  foreach ($Line in Get-Content $Cores) {
-    $Parts = $Line.Split(':', 2)
-    if ($PARTS.Count -eq 2) {
+  foreach ($Board in Get-Content $BoardsFile) {
+    if ([string]::IsNullOrWhiteSpace($Board)) { continue }
+
+    $Parts = $Board.Split(':')
+    if ($Parts.Count -ge 2) {
       $Core = "$($Parts[0]):$($Parts[1])"
       & $ArduinoCliExe core install $Core
     }
@@ -68,30 +73,26 @@ function Install-Dependencies {
   Write-Host ""
 
   # Specify the directory to file listing the required arduino libraries.
-  $Libs = "arduino-libs.txt"
+  $LibrariesFile = "arduino-libs.txt"
 
   & $ArduinoCliExe lib update-index
 
-  foreach ($Lib in Get-Content $Libs) {
-    & $ArduinoCliExe lib install $Lib
+  foreach ($Library in Get-Content $LibrariesFile) {
+    if ([string]::IsNullOrWhiteSpace($Library)) { continue }
+
+    & $ArduinoCliExe lib install $Library
   }
   
   Write-Host ""
 }
 
 function Start-Setup {
-  if ($args.Count -lt 2) {
-    $args += "--path"
-  }
-  else {
-    Show-Help
-  }
-
-  Install-ArduinoCli
+  Install-ArduinoCli -AddToPath:$true
   Install-Dependencies
 }
 
 function Start-Build {
+  param([string[]]$BuildArgs)
 
   Write-Host "...Compiling the project..."
   Write-Host ""
@@ -101,14 +102,14 @@ function Start-Build {
   # Specify the build directory.
   $BuildDir = "build"
   # Specify the directories to files listing the required arduino boards.
-  $Boards = "arduino-boards.txt"
+  $BoardsFile = "arduino-boards.txt"
   # Build for multiple boards.
   # Read one line at a time (No spaces or tabs as delimiters).
-  foreach ($Board in Get-Content $Boards) {
+  foreach ($Board in Get-Content $BoardsFile) {
+    if ([string]::IsNullOrWhiteSpace($Board)) { continue }
+
     # Replace ":" with "-" to create the build sub-folder with the board name.
     $BuildSubdir = $Board -replace ':','-'
-    # Take 2nd argument onwards from the command line args.
-    $BuildArgs = $args[1..($args.Count - 1)]
     # Compile clean (no cache) and use command line args (2nd onwards) if passed to the script.
     & $ArduinoCliExe compile -b $Board $SketchDir --clean --build-path "$BuildDir\$BuildSubdir" $BuildArgs
   }
@@ -131,6 +132,7 @@ function Show-Help {
   Write-Host "$ScriptName $CmdSetup"
   Write-Host "$ScriptName $CmdCli [optional flag]"
   Write-Host "$ScriptName $CmdBuild [optional arduino-cli compile flags]"
+  Write-Host ""
   Write-Host "Examples:"
   Write-Host "$ScriptName $CmdCli $ArgPath"
   Write-Host "$ScriptName $CmdBuild --port COM3 --upload"
@@ -139,9 +141,9 @@ function Show-Help {
 
 switch ($args[0]) {
   $CmdSetup { Start-Setup }
-  $CmdCli   { Install-ArduinoCli }
+  $CmdCli   { Install-ArduinoCli -AddToPath ($args.Count -gt 1 -and $args[1] -eq $ArgPath) }
   $CmdDeps  { Install-Dependencies }
-  $CmdBuild { Start-Build }
+  $CmdBuild { Start-Build -BuildArgs $args[1..($args.Count - 1)] }
   $CmdHelp  { Show-Help }
   default   { Show-Help }
 }
