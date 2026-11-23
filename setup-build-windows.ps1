@@ -9,6 +9,7 @@
 
 # Command line arguments
 $ScriptName = Split-Path $PSCommandPath -Leaf
+$CmdSetup = "-setup"
 $CmdCli   = "-cli"
 $ArgPath  = "--path"
 $CmdDeps  = "-deps"
@@ -78,7 +79,19 @@ function Install-Dependencies {
   Write-Host ""
 }
 
-function Build-Project {
+function Start-Setup {
+  if ($args.Count -lt 2) {
+    $args += "--path"
+  }
+  else {
+    Show-Help
+  }
+
+  Install-ArduinoCli
+  Install-Dependencies
+}
+
+function Start-Build {
 
   Write-Host "...Compiling the project..."
   Write-Host ""
@@ -107,6 +120,7 @@ function Show-Help {
   Write-Host "...Help..."
   Write-Host ""
   Write-Host "Available commands are:"
+  Write-Host "$CmdSetup  Install arduino-cli (adds to the Windows environment path) and project dependencies (Arduino cores and libraries)."
   Write-Host "$CmdCli    Install arduino-cli. Add optional flag $ArgPath to add arduino-cli to the Windows environment path." 
   Write-Host "$CmdDeps   Install project dependencies (Arduino cores and libraries)."
   Write-Host "$CmdBuild  Compile the project. Add optional arduino-cli flags if desired (e.g., to upload the programme to the board)."
@@ -114,6 +128,7 @@ function Show-Help {
   Write-Host ""
   Write-Host "Usage:"
   Write-Host "$ScriptName <command>"
+  Write-Host "$ScriptName $CmdSetup"
   Write-Host "$ScriptName $CmdCli [optional flag]"
   Write-Host "$ScriptName $CmdBuild [optional arduino-cli compile flags]"
   Write-Host "Examples:"
@@ -123,9 +138,10 @@ function Show-Help {
 }
 
 switch ($args[0]) {
+  $CmdSetup { Start-Setup }
   $CmdCli   { Install-ArduinoCli }
   $CmdDeps  { Install-Dependencies }
-  $CmdBuild { Build-Project }
+  $CmdBuild { Start-Build }
   $CmdHelp  { Show-Help }
   default   { Show-Help }
 }

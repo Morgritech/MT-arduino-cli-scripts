@@ -13,6 +13,7 @@ echo
 
 # Command line arguments
 SCRIPT_NAME=$(basename "$0")
+CMD_SETUP="-setup"
 CMD_CLI="-cli"
 ARG_PATH="--path"
 CMD_DEPS="-deps"
@@ -23,7 +24,7 @@ CMD_HELP="-help"
 # home/<username>/bin
 ARDUINO_CLI_DIR=~/bin
 
-if [ "$1" == "$CMD_CLI" ] ; then
+if [ "$1" == "$CMD_CLI" || "$1" == "$CMD_SETUP" ] ; then
   echo ...Installing Arduino CLI...
   echo
 
@@ -34,7 +35,7 @@ if [ "$1" == "$CMD_CLI" ] ; then
   echo
   popd > /dev/null # Restore the working directory + suppress the output of popd.
 
-  if [ "$2" == "$ARG_PATH" ] ; then
+  if [ "$2" == "$ARG_PATH" || "$1" == "$CMD_SETUP" ] ; then
     # Add arduino CLI directory to Linux environment path (current session) so it can be executed directly.
     echo ...Adding arduino-cli to the Linux environment path...
     echo
@@ -45,7 +46,7 @@ if [ "$1" == "$CMD_CLI" ] ; then
   #echo
 fi
 
-if [ "$1" == "$CMD_DEPS" ] ; then
+if [ "$1" == "$CMD_DEPS" || "$1" == "$CMD_SETUP" ] ; then
   echo ...Installing and setting up project dependencies...
   echo
 
@@ -111,13 +112,15 @@ if [ "$1" == "$CMD_HELP" ] || ([ "$1" != "$CMD_CLI" ] && [ "$1" != "$CMD_DEPS" ]
   "...Help...
 
   Available commands are:
+  $CMD_SETUP  Install arduino-cli (adds to the Linux environment path) and project dependencies (Arduino cores and libraries).
   $CMD_CLI    Install arduino-cli. Optional flag $ARG_PATH to add arduino-cli to the Linux environment path. 
   $CMD_DEPS   Install project dependencies (Arduino cores and libraries).
   $CMD_BUILD  Compile the project. Add optional arduino-cli flags if desired (e.g., to upload the programme to the board).
   $CMD_HELP   Show available commands.
-  
+
   Usage:
   $SCRIPT_NAME <command>
+  $SCRIPT_NAME $CMD_SETUP
   $SCRIPT_NAME $CMD_CLI [optional flag]
   $SCRIPT_NAME $CMD_BUILD [optional arduino-cli compile flags]
   EXAMPLES

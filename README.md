@@ -94,30 +94,37 @@ Open a Command Prompt (CMD) terminal, navigate to the project directory, and run
 Print help/usage instructions:
 
 ``` shell
-external\mt-arduino-cli-scripts\setup-build-windows.cmd -help
+external\mt-arduino-cli-scripts\setup-build-windows.ps1 -help
 ```
+
+Setup the project:
+
+This installs arduino-cli and adds it to Windows environment path (current session), and installs arduino cores and libraries. Adding to path allows you to run `arduino-cli` commands (if desired) directly without specifying the full path to the arduino-cli executable (%ProgramFiles%\Arduino CLI).
+
+``` shell
+external\mt-arduino-cli-scripts\setup-build-windows.ps1 -setup
+```
+
+See the following sections to alternatively perform setup steps individually.
 
 Install arduino-cli:
 
 ``` shell
-external\mt-arduino-cli-scripts\setup-build-windows.cmd -cli
+external\mt-arduino-cli-scripts\setup-build-windows.ps1 -cli
 ```
 
 OR
 
-Install arduino-cli and add it to the Windows environment path. This allows you to run `arduino-cli` commands (if desired) directly without specifying the full path to the arduino-cli executable (%ProgramFiles%\Arduino CLI):
+Install arduino-cli and add it to the Windows environment path (current session):
 
 ``` shell
-external\mt-arduino-cli-scripts\setup-build-windows.cmd -cli --path
+external\mt-arduino-cli-scripts\setup-build-windows.ps1 -cli --path
 ```
-
-> [!NOTE]
-> This only updates the path in the current user session and does not persist if the session is closed. You will need to re-run the command for a new session.
 
 Install arduino cores and libraries:
 
 ``` shell
-external\mt-arduino-cli-scripts\setup-build-windows.cmd -deps
+external\mt-arduino-cli-scripts\setup-build-windows.ps1 -deps
 ```
 
 **Build and optionally upload the project.**
@@ -153,8 +160,18 @@ Replace "username" with your actual username/log-in name. You will need to log-o
 Print help/usage instructions:
 
 ``` shell
-external/mt-arduino-cli-scripts/setup-build-windows.cmd -help
+external/mt-arduino-cli-scripts/setup-build-linux.sh -help
 ```
+
+Setup the project:
+
+This installs arduino-cli and adds it to Linux environment path (current session), and installs arduino cores and libraries. Adding to path allows you to run `arduino-cli` commands (if desired) directly without specifying the full path to the arduino-cli executable (~/bin).
+
+``` shell
+source external/mt-arduino-cli-scripts/setup-build-linux.sh -setup
+```
+
+See the following sections to alternatively perform setup steps individually.
 
 Install arduino-cli:
 
@@ -164,14 +181,11 @@ external/mt-arduino-cli-scripts/setup-build-linux.sh -cli
 
 OR
 
-Install arduino-cli and add it to the Windows environment path. This allows you to run `arduino-cli` commands (if desired) directly without specifying the full path to the arduino-cli executable (~/bin):
+Install arduino-cli and add it to the Linux environment path:
 
 ``` shell
 source external/mt-arduino-cli-scripts/setup-build-linux.sh -cli --path
 ```
-
-> [!NOTE]
-> This only updates the path in the current user session and does not persist if the session is closed. You will need to re-run the command for a new session.
 
 Install arduino cores and libraries:
 
