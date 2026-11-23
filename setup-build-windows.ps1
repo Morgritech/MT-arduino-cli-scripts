@@ -20,7 +20,7 @@ $CmdHelp  = "-help"
 $ArduinoCliDir = "$env:ProgramFiles\Arduino CLI"
 $ArduinoCliExe = Join-Path $ArduinoCliDir "arduino-cli.exe"
 
-function Install-Cli {
+function Install-ArduinoCli {
   Write-Host "...Installing Arduino CLI..."
   Write-Host ""
   
@@ -36,11 +36,9 @@ function Install-Cli {
 
   & $ArduinoCliExe version
   Write-Host ""
-
-  End
 }
 
-function Install-Deps {
+function Install-Dependencies {
   Write-Host "...Installing and setting up project dependencies..."
   Write-Host ""
 
@@ -78,11 +76,9 @@ function Install-Deps {
   }
   
   Write-Host ""
-
-  End
 }
 
-function Build {
+function Build-Project {
 
   Write-Host "...Compiling the project..."
   Write-Host ""
@@ -105,11 +101,9 @@ function Build {
   }
 
   Write-Host ""
-
-  End
 }
 
-function Help {
+function Show-Help {
   Write-Host "...Help..."
   Write-Host ""
   Write-Host "Available commands are:"
@@ -126,20 +120,15 @@ function Help {
   Write-Host "$ScriptName $CmdCli $ArgPath"
   Write-Host "$ScriptName $CmdBuild --port COM3 --upload"
   Write-Host ""
-
-  End
-}
-
-function End {
-  Write-Host "...End..."
-  Write-Host ""
-  exit
 }
 
 switch ($args[0]) {
-  $CmdCli   { Install-Cli }
-  $CmdDeps  { Install-Deps }
-  $CmdBuild { Build }
-  $CmdHelp  { Help }
-  default    { Help }
+  $CmdCli   { Install-ArduinoCli }
+  $CmdDeps  { Install-Dependencies }
+  $CmdBuild { Build-Project }
+  $CmdHelp  { Show-Help }
+  default   { Show-Help }
 }
+
+Write-Host "...End..."
+Write-Host ""
