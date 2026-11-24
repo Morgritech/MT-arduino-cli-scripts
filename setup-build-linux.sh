@@ -54,7 +54,7 @@ CMD_HELP="-help"
 install_arduino_cli() {
   local add_to_path=$1
   
-  echo "${HEADING_COLOUR}...Installing Arduino CLI...${RESET_COLOUR}"
+  echo -e "${HEADING_COLOUR}...Installing Arduino CLI...${RESET_COLOUR}"
   echo
 
   pushd $PWD /dev/null # Save current working directory + suppress the output of pushd.
@@ -77,7 +77,7 @@ install_arduino_cli() {
 }
 
 install_dependencies() {
-  echo "${HEADING_COLOUR}...Installing and setting up project dependencies...${RESET_COLOUR}"
+  echo -e "${HEADING_COLOUR}...Installing and setting up project dependencies...${RESET_COLOUR}"
   echo
 
   echo ...Installing arduino platforms/cores...
@@ -119,7 +119,7 @@ start_setup()
 start_build() {
   local build_args=("$@") # Here for readability (Redundant as "$@" can be used directly in the function).
 
-  echo "${HEADING_COLOUR}...Compiling the project...${RESET_COLOUR}"
+  echo -e "${HEADING_COLOUR}...Compiling the project...${RESET_COLOUR}"
   echo
 
   # Build for multiple boards.
@@ -136,7 +136,7 @@ start_build() {
 }
 
 show_help() {
-  echo \
+  echo -e \
   "${HEADING_COLOUR}...Help...${RESET_COLOUR}
 
   ${SUB_HEADING_COLOUR}Available commands are:${RESET_COLOUR}
@@ -187,11 +187,12 @@ case "$1" in
   ;;
 
 *)
-  echo "${ERROR_COLOUR}Error: Invalid command.${RESET_COLOUR}"
+  echo -e "${ERROR_COLOUR}Error: Invalid command.${RESET_COLOUR}"
+  echo
   show_help
   ;;
 
 esac
 
-echo "${HEADING_COLOUR}...End...${RESET_COLOUR}"
+echo -e "${HEADING_COLOUR}...End...${RESET_COLOUR}"
 echo
