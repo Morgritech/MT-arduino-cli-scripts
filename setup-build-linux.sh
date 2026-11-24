@@ -57,7 +57,7 @@ install_arduino_cli() {
   echo -e "${HEADING_COLOUR}...Installing Arduino CLI...${RESET_COLOUR}"
   echo
 
-  pushd $PWD /dev/null # Save current working directory + suppress the output of pushd.
+  pushd $PWD > /dev/null # Save current working directory + suppress the output of pushd.
   cd "$HOME" # Ensure we are in the "home/<username>" directory.
   sudo apt-get --no-install-recommends install -y curl
   curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
