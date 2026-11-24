@@ -69,7 +69,7 @@ install_arduino_cli() {
     echo ...Adding arduino-cli to the Linux environment path...
     echo
 
-    PATH="$PATH:$ARDUINO_CLI_DIR" # $PATH already exported by default.
+    PATH=$PATH:$ARDUINO_CLI_DIR # $PATH already exported by default.
   fi
 
   "$ARDUINO_CLI_EXE" version
