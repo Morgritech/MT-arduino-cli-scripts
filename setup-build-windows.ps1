@@ -1,3 +1,5 @@
+Write-Host ""
+
 # Check admin privileges.
 #$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
 #$Principal = [Security.Principal.WindowsPrincipal]::new($Identity)
@@ -7,7 +9,35 @@
 #  exit 1
 #}
 
-# Command line arguments
+# Colours.
+
+$ErrorColour = [ConsoleColor]::Red
+#$SuccessColour = [ConsoleColor]::Green
+#$WarningColour = [ConsoleColor]::Yellow
+$SubHeadingColour = [ConsoleColor]::Blue
+#$DebugColour = [ConsoleColor]::Magenta
+$HeadingColour = [ConsoleColor]::Cyan
+
+# Directories and files.
+
+# Arduino CLI.
+$ArduinoCliDir = "$env:ProgramFiles\Arduino CLI" # C:\Program Files\Arduino CLI
+$ArduinoCliExe = Join-Path $ArduinoCliDir "arduino-cli.exe"
+
+# File listing the arduino boards (in the form of FQBN). Cores will be extracted from the FQBN.
+$BoardsFile = "arduino-boards.txt"
+
+# File listing the arduino libraries (in the form of "library_name@version_number").
+$LibrariesFile = "arduino-libs.txt"
+
+# Sketch directory.
+$SketchDir = "src" # ./src
+
+# Build directory.
+$BuildDir = "build" # ./build
+
+# Command-line parameters.
+
 $ScriptName = Split-Path $PSCommandPath -Leaf
 $CmdSetup = "-setup"
 $CmdCli   = "-cli"
@@ -16,15 +46,12 @@ $CmdDeps  = "-deps"
 $CmdBuild = "-build"
 $CmdHelp  = "-help"
 
-# Specify the directory where arduino-cli is/will be installed.
-# C:\Program Files\Arduino CLI
-$ArduinoCliDir = "$env:ProgramFiles\Arduino CLI"
-$ArduinoCliExe = Join-Path $ArduinoCliDir "arduino-cli.exe"
+# Functions.
 
 function Install-ArduinoCli {
   param([switch]$AddToPath)
 
-  Write-Host "...Installing Arduino CLI..."
+  Write-Host "...Installing Arduino CLI..." -ForegroundColor $HeadingColour
   Write-Host ""
   
   winget install --accept-package-agreements -e ArduinoSA.CLI
@@ -43,15 +70,11 @@ function Install-ArduinoCli {
 }
 
 function Install-Dependencies {
-  Write-Host "...Installing and setting up project dependencies..."
+  Write-Host "...Installing and setting up project dependencies..." -ForegroundColor $HeadingColour
   Write-Host ""
 
   Write-Host "...Installing arduino platforms/cores..."
   Write-Host ""
-
-  # Specify the directory to the file listing the required arduino cores.
-  # The name of the cores will be extracted from the name of the boards.
-  $BoardsFile = "arduino-boards.txt"
 
   & $ArduinoCliExe core update-index
 
@@ -72,9 +95,6 @@ function Install-Dependencies {
   Write-Host "...Installing arduino libraries..."
   Write-Host ""
 
-  # Specify the directory to file listing the required arduino libraries.
-  $LibrariesFile = "arduino-libs.txt"
-
   & $ArduinoCliExe lib update-index
 
   foreach ($Library in Get-Content $LibrariesFile) {
@@ -94,15 +114,9 @@ function Start-Setup {
 function Start-Build {
   param([string[]]$BuildArgs)
 
-  Write-Host "...Compiling the project..."
+  Write-Host "...Compiling the project..." -ForegroundColor $HeadingColour
   Write-Host ""
 
-  # Specify the sketch directory.
-  $SketchDir = "src"
-  # Specify the build directory.
-  $BuildDir = "build"
-  # Specify the directories to files listing the required arduino boards.
-  $BoardsFile = "arduino-boards.txt"
   # Build for multiple boards.
   # Read one line at a time (No spaces or tabs as delimiters).
   foreach ($Board in Get-Content $BoardsFile) {
@@ -118,26 +132,28 @@ function Start-Build {
 }
 
 function Show-Help {
-  Write-Host "...Help..."
+  Write-Host "...Help..." -ForegroundColor $HeadingColour
   Write-Host ""
-  Write-Host "Available commands are:"
+  Write-Host "Available commands are:" -ForegroundColor $SubHeadingColour
   Write-Host "$CmdSetup  Install arduino-cli (adds to the Windows environment path) and project dependencies (Arduino cores and libraries)."
   Write-Host "$CmdCli    Install arduino-cli. Add optional flag $ArgPath to add arduino-cli to the Windows environment path." 
   Write-Host "$CmdDeps   Install project dependencies (Arduino cores and libraries)."
   Write-Host "$CmdBuild  Compile the project. Add optional arduino-cli flags if desired (e.g., to upload the programme to the board)."
   Write-Host "$CmdHelp   Show available commands."
   Write-Host ""
-  Write-Host "Usage:"
+  Write-Host "Usage:" -ForegroundColor $SubHeadingColour
   Write-Host "$ScriptName <command>"
   Write-Host "$ScriptName $CmdSetup"
   Write-Host "$ScriptName $CmdCli [optional flag]"
   Write-Host "$ScriptName $CmdBuild [optional arduino-cli compile flags]"
   Write-Host ""
-  Write-Host "Examples:"
+  Write-Host "Examples:" -ForegroundColor $SubHeadingColour
   Write-Host "$ScriptName $CmdCli $ArgPath"
   Write-Host "$ScriptName $CmdBuild --port COM3 --upload"
   Write-Host ""
 }
+
+# Script.
 
 switch ($args[0]) {
   $CmdSetup { Start-Setup }
@@ -145,8 +161,12 @@ switch ($args[0]) {
   $CmdDeps  { Install-Dependencies }
   $CmdBuild { Start-Build -BuildArgs $args[1..($args.Count - 1)] }
   $CmdHelp  { Show-Help }
-  default   { Show-Help }
+  default   {
+    Write-Host "Error: Invalid command." -ForegroundColor $ErrorColour
+    Write-Host ""
+    Show-Help
+  }
 }
 
-Write-Host "...End..."
+Write-Host "...End..." -ForegroundColor $HeadingColour
 Write-Host ""
