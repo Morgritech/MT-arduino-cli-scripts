@@ -20,6 +20,8 @@ $HeadingColour = [ConsoleColor]::Cyan
 
 # Directories and files.
 
+$ScriptName = Split-Path $PSCommandPath -Leaf
+
 # Arduino CLI.
 $ArduinoCliDir = "$env:ProgramFiles\Arduino CLI" # C:\Program Files\Arduino CLI
 $ArduinoCliExe = Join-Path $ArduinoCliDir "arduino-cli.exe"
@@ -38,7 +40,6 @@ $BuildDir = "build" # ./build
 
 # Command-line parameters.
 
-$ScriptName = Split-Path $PSCommandPath -Leaf
 $CmdSetup = "-setup"
 $CmdCli   = "-cli"
 $ArgPath  = "--path"

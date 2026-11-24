@@ -23,6 +23,8 @@ RESET_COLOUR='\033[0m'
 
 # Directories and files.
 
+SCRIPT_NAME=$(basename "$0")
+
 # Arduino CLI.
 ARDUINO_CLI_DIR="$HOME/bin" # home/<username>/bin OR ~/bin
 ARDUINO_CLI_EXE="$ARDUINO_CLI_DIR/arduino-cli"
@@ -41,7 +43,6 @@ BUILD_DIR="build" # ./build
 
 # Command-line parameters.
 
-SCRIPT_NAME=$(basename "$0")
 CMD_SETUP="-setup"
 CMD_CLI="-cli"
 ARG_PATH="--path"
