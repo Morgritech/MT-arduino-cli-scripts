@@ -21,93 +21,109 @@ CMD_BUILD="-build"
 CMD_HELP="-help"
 
 # Specify the directory where arduino-cli is/will be installed.
-# home/<username>/bin
-ARDUINO_CLI_DIR=~/bin
+# home/<username>/bin OR ~/bin
+ARDUINO_CLI_DIR="$HOME/bin"
+ARDUINO_CLI_EXE="$ARDUINO_CLI_DIR/arduino-cli"
 
-if [ "$1" == "$CMD_CLI" || "$1" == "$CMD_SETUP" ] ; then
+install_arduino_cli() {
+  local add_to_path=$1
+  
   echo ...Installing Arduino CLI...
   echo
 
-  pushd $PWD # Save current working directory.
-  cd ~ # Ensure we are in the "home/<username>" directory.
+  pushd $PWD /dev/null # Save current working directory + suppress the output of pushd.
+  cd "$HOME" # Ensure we are in the "home/<username>" directory.
   sudo apt-get --no-install-recommends install -y curl
   curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-  echo
   popd > /dev/null # Restore the working directory + suppress the output of popd.
+  echo
 
-  if [ "$2" == "$ARG_PATH" || "$1" == "$CMD_SETUP" ] ; then
+  if [[ $add_to_path == true ]] ; then
     # Add arduino CLI directory to Linux environment path (current session) so it can be executed directly.
     echo ...Adding arduino-cli to the Linux environment path...
     echo
-    PATH=$PATH:$ARDUINO_CLI_DIR
+
+    PATH="$PATH:$ARDUINO_CLI_DIR" # $PATH already exported by default.
   fi
 
-  #$ARDUINO_CLI_DIR/arduino-cli version
-  #echo
-fi
+  "$ARDUINO_CLI_EXE" version
+  echo
+}
 
-if [ "$1" == "$CMD_DEPS" || "$1" == "$CMD_SETUP" ] ; then
+
+install_dependencies() {
   echo ...Installing and setting up project dependencies...
   echo
 
   echo ...Installing arduino platforms/cores...
   echo
 
-  # Specify the directories to the file listing the required arduino cores.
+  # Specify the directory to the file listing the required arduino cores.
   # The name of the cores will be extracted from the name of the boards.  
-  CORES=arduino-boards.txt
+  local boards_file="arduino-boards.txt"
 
-  $ARDUINO_CLI_DIR/arduino-cli core update-index
+  "$ARDUINO_CLI_EXE" core update-index
 
   # Read one line at a time.
-  for CORE in $(cat $CORES) ; do
+  for board in $(cat "$boards_file") ; do
     # Split text which are separated by colon (:) into 1st (first), 2nd (second) and 3rd (third) argument.
     # Carriage return '\r' must also be removed in-case file was created in Windows.
-    IFS=':' read -r first second third <<< ${CORE%$'\r'}
-    CORE="$first:$second"
-    $ARDUINO_CLI_DIR/arduino-cli core install $CORE
+    IFS=':' read -r first second third <<< "${board%$'\r'}"
+    core="$first:$second"
+    "$ARDUINO_CLI_EXE" core install "$core"
   done
+
   unset IFS
+  
   echo
 
   echo ...Installing arduino libraries...
   echo
 
   # Specify the directory to the file listing the required arduino libraries.
-  LIBS=arduino-libs.txt
+  local libraries_file="arduino-libs.txt"
 
-  $ARDUINO_CLI_DIR/arduino-cli lib update-index
+  "$ARDUINO_CLI_EXE" lib update-index
 
-  for LIB in $(cat $LIBS) ; do
-    $ARDUINO_CLI_DIR/arduino-cli lib install ${LIB%$'\r'}
+  for library in $(cat "$libraries_file") ; do
+    "$ARDUINO_CLI_EXE" lib install "${library%$'\r'}"
   done
+  
   echo
-fi
+}
 
-if [ "$1" == "$CMD_BUILD" ] ; then
+start_setup()
+{
+  install_arduino_cli true
+  install_dependencies
+}
+
+start_build() {
+  local build_args=("$@") # Here for readability (Redundant as "$@" can be used directly in the function).
 
   echo ...Compiling the project...
   echo
 
   # Specify the sketch directory.
-  SKETCH_DIR=src #./src
+  local sketch_dir="src" #./src
   # Specify the build directory.
-  BUILD_DIR=build
+  local build_dir="build"
   # Specify the directories to files listing the required arduino boards.
-  BOARDS=arduino-boards.txt
+  local boards_file="arduino-boards.txt"
   # Build for multiple boards.
   # Read one line at a time (No spaces or tabs as delimiters).
-  for BOARD in $(cat "$BOARDS") ; do
+  for board in $(cat "$boards_file") ; do
       # Replace ":" with "-" to create the build sub-folder with the board name.
-      BUILD_SUBDIR="${BOARD//:/-}"
+      build_subdir="${board//:/-}"
       # Compile clean (no cache) and use command line args (2nd onwards) if passed to the script.
       # Carriage return '\r' must be removed in-case file was created in Windows.
-      $ARDUINO_CLI_DIR/arduino-cli compile -b ${BOARD%$'\r'} $SKETCH_DIR --clean --build-path $BUILD_DIR/$BUILD_SUBDIR ${@:2}
+      "$ARDUINO_CLI_EXE" compile -b "${board%$'\r'}" "$sketch_dir" --clean --build-path "$build_dir/$build_subdir" "${build_args[@]}" # "${build_args[@]}" equivalent to "$@"
   done
-  echo
-fi
 
-if [ "$1" == "$CMD_HELP" ] || ([ "$1" != "$CMD_CLI" ] && [ "$1" != "$CMD_DEPS" ] && [ "$1" != "$CMD_BUILD" ]) ; then
+  echo
+}
+
+show_help() {
   echo \
   "...Help...
 
@@ -123,11 +139,44 @@ if [ "$1" == "$CMD_HELP" ] || ([ "$1" != "$CMD_CLI" ] && [ "$1" != "$CMD_DEPS" ]
   $SCRIPT_NAME $CMD_SETUP
   $SCRIPT_NAME $CMD_CLI [optional flag]
   $SCRIPT_NAME $CMD_BUILD [optional arduino-cli compile flags]
-  EXAMPLES
+
+  Examples:
   $SCRIPT_NAME $CMD_CLI $ARG_PATH
   $SCRIPT_NAME $CMD_BUILD --port /dev/ttyACM0 --upload
   "
-fi
+}
+
+case "$1" in
+
+"$CMD_SETUP")
+  start_setup
+  ;;
+
+"$CMD_CLI")
+  if [[ $2 == $ARG_PATH ]]; then
+    install_arduino_cli true
+  else
+    install_arduino_cli false
+  fi
+  ;;
+
+"$CMD_DEPS")
+  install_dependencies
+  ;;
+
+"$CMD_BUILD")
+  start_build "${@:2}"
+  ;;
+
+"$CMD_HELP")
+  show_help
+  ;;
+
+*)
+  show_help
+  ;;
+
+esac
 
 echo ...End...
 echo
